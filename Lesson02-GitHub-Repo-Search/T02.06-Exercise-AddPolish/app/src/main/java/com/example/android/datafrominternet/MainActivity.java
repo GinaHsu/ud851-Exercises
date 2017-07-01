@@ -123,8 +123,10 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String githubSearchResults) {
+
             // TODO (27) As soon as the loading is complete, hide the loading indicator
             mLoadingIndicator.setVisibility(View.INVISIBLE);
+
             if (githubSearchResults != null && !githubSearchResults.equals("")) {
                 // TODO (17) Call showJsonDataView if we have valid, non-null results
                 mSearchResultsTextView.setText(githubSearchResults);
