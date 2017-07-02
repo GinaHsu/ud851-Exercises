@@ -114,6 +114,7 @@ public class GreenAdapter extends RecyclerView.Adapter<GreenAdapter.NumberViewHo
      */
     @Override
     public int getItemCount() {
+
         return mNumberItems;
     }
 
