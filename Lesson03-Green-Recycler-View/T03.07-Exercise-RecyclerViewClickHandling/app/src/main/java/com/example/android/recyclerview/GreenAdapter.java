@@ -23,6 +23,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import static android.R.attr.onClick;
+
 /**
  * We couldn't come up with a good name for this class. Then, we realized
  * that this lesson is about RecyclerView.
@@ -40,7 +42,7 @@ public class GreenAdapter extends RecyclerView.Adapter<GreenAdapter.NumberViewHo
     private static final String TAG = GreenAdapter.class.getSimpleName();
 
     // TODO (3) Create a final private ListItemClickListener called mOnClickListener
-
+    final private ListItemClickLister mOnClickListener;
     /*
      * The number of ViewHolders that have been created. Typically, you can figure out how many
      * there should be by determining how many list items fit on your screen at once and add 2 to 4
@@ -89,6 +91,10 @@ public class GreenAdapter extends RecyclerView.Adapter<GreenAdapter.NumberViewHo
 
     // TODO (1) Add an interface called ListItemClickListener
     // TODO (2) Within that interface, define a void method called onListItemClick that takes an int as a parameter
+    public interface ListItemClickLister{
+        void onListItenClick(int clickedItemIndex);
+    }
+
 
     // TODO (4) Add a ListItemClickListener as a parameter to the constructor and store it in mOnClickListener
     /**
@@ -97,8 +103,9 @@ public class GreenAdapter extends RecyclerView.Adapter<GreenAdapter.NumberViewHo
      *
      * @param numberOfItems Number of items to display in list
      */
-    public GreenAdapter(int numberOfItems) {
+    public GreenAdapter(int numberOfItems, ListItemClickLister listener) {
         mNumberItems = numberOfItems;
+        mOnClickListener = listener;
         viewHolderCount = 0;
     }
 
@@ -167,10 +174,12 @@ public class GreenAdapter extends RecyclerView.Adapter<GreenAdapter.NumberViewHo
     /**
      * Cache of the children views for a list item.
      */
-    class NumberViewHolder extends RecyclerView.ViewHolder {
+    class NumberViewHolder extends RecyclerView.ViewHolder
+            implements View.OnClickListener{
 
         // Will display the position in the list, ie 0 through getItemCount() - 1
         TextView listItemNumberView;
+
         // Will display which ViewHolder is displaying this data
         TextView viewHolderIndex;
 
@@ -187,6 +196,7 @@ public class GreenAdapter extends RecyclerView.Adapter<GreenAdapter.NumberViewHo
             listItemNumberView = (TextView) itemView.findViewById(R.id.tv_item_number);
             viewHolderIndex = (TextView) itemView.findViewById(R.id.tv_view_holder_instance);
             // TODO (7) Call setOnClickListener on the View passed into the constructor (use 'this' as the OnClickListener)
+            itemView.setOnClickListener(this);
         }
 
         /**
@@ -195,9 +205,18 @@ public class GreenAdapter extends RecyclerView.Adapter<GreenAdapter.NumberViewHo
          * @param listIndex Position of the item in the list
          */
         void bind(int listIndex) {
+
             listItemNumberView.setText(String.valueOf(listIndex));
         }
 
         // TODO (6) Override onClick, passing the clicked item's position (getAdapterPosition()) to mOnClickListener via its onListItemClick method
+        /**
+         * Called whenever a user clicks on an item in the list.
+         * @param view The View that was clicked
+         */
+        public void onClick(View view){
+            int clickedPosition = getAdapterPosition();
+            mOnClickListener.onListItenClick(clickedPosition);
+        }
     }
 }
